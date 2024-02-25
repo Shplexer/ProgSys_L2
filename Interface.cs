@@ -31,7 +31,7 @@
             Console.WriteLine("4. Выход");
             DivideLine();
         }
-        public static List<double> GetArray() {
+        public static List<double> FillArray() {
             bool exitFlag = false;
             List<double> array = [];
 
@@ -45,6 +45,7 @@
                         GiveInputInstructions();
                         string? input;
                         do {
+                            Console.WriteLine($"Введите переменную: ");
                             input = Console.ReadLine();
                             if (input == "~") {
                                 break;
@@ -101,19 +102,19 @@
             return number;
         }
 
-        public static double GetDoubleInput(string input) {
-            bool errFlag;
-            double number;
-            do {
-                Console.WriteLine($"Введите переменную: ");
-                errFlag = !double.TryParse(input.Replace(',', '.'), out number);
-
-                if (errFlag) {
+        public static double GetDoubleInput(string? input) {
+            bool errFlag = true;
+            double number = 0.0;
+            while (errFlag) {
+                if (string.IsNullOrEmpty(input) || !double.TryParse(input.Replace(',', '.'), out number)) {
                     Console.WriteLine("Ошибка ввода! Попробуйте снова.");
+                    input = Console.ReadLine();
+                    errFlag = true;
                 }
-
-            } while (errFlag);
-
+                else {
+                    errFlag = false;
+                }
+            }
             return number;
         }
 

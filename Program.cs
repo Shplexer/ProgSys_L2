@@ -9,7 +9,7 @@ namespace negativePositiveSorting {
             while (true) {
                 Interface.GiveWelcomeMessage();
 
-                List<double> array = Interface.GetArray();
+                List<double> array = Interface.FillArray();
                 List<double> sortedArray = Calculatons.Sort(array);
 
                 Interface.DivideLine();
