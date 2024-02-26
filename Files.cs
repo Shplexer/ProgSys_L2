@@ -2,20 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace negativePositiveSorting {
     class Files {
         public static (bool isValid, string fileName) FileUploadValidation() {
             bool saveFlag = true;
             bool errFlag = false;
+            string pattern = @"^[a-zA-Z0-9_.-]+$";
+            string[] reservedNames = { "CON", "PRN", "AUX", "NUL",
+                "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+                "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
             string? fileName;
             do {
                 saveFlag = true;
                 errFlag = false;
-                Console.WriteLine("Введите имя файла: ");
                 do {
+                    Console.WriteLine("Введите имя файла: ");
                     fileName = Console.ReadLine();
-                } while (string.IsNullOrEmpty(fileName));
+                } while (string.IsNullOrEmpty(fileName) || !Regex.IsMatch(fileName, pattern) || reservedNames.Contains(fileName.ToUpper()));
 
 
                 if (!fileName.EndsWith(".txt")) {
@@ -31,12 +36,12 @@ namespace negativePositiveSorting {
                     Console.WriteLine("Файл с таким именем уже существует. Перезаписать?");
                     Console.WriteLine("1. Да");
                     Console.WriteLine("2. Нет");
-                    saveChoiceControls selection = (saveChoiceControls)Interface.GetIntInput();
+                    SaveChoiceControls selection = (SaveChoiceControls)Interface.GetIntInput();
                     switch (selection) {
-                        case saveChoiceControls.save:
+                        case SaveChoiceControls.save:
                             saveFlag = true;
                             break;
-                        case saveChoiceControls.cancel:
+                        case SaveChoiceControls.cancel:
                             saveFlag = false;
                             break;
                         default:
@@ -54,7 +59,6 @@ namespace negativePositiveSorting {
             } while (errFlag);
             return (saveFlag, fileName);
         }
-
         public static void FileUpload(string fileName, List<double> result, List<double> array) {
             using StreamWriter writer = new(fileName);
             foreach (double element in array) {
@@ -62,6 +66,7 @@ namespace negativePositiveSorting {
             }
             writer.WriteLine("//");
             writer.WriteLine($"Отсортированный массив: {string.Join(", ", result)}");
+            writer.Close();
         }
         public static string FileDownloadValidation() {
             string? fileName;
@@ -136,6 +141,7 @@ namespace negativePositiveSorting {
                     Console.WriteLine($"{value}");
                 }
             }
+            reader.Close();
             return array;
         }
     }

@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace negativePositiveSorting {
+﻿namespace negativePositiveSorting {
     class Calculatons {
         public static List<double> Sort(List<double> originalArray) {
 

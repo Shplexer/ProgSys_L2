@@ -1,5 +1,5 @@
 ﻿namespace negativePositiveSorting {
-    enum saveChoiceControls {
+    enum SaveChoiceControls {
         save = 1,
         cancel,
         exit
@@ -23,7 +23,7 @@
             Console.WriteLine("(В рамках данной работы '0' считается положиельным числом)");
             DivideLine();
         }
-        public static void GiveMainMenu() {
+        private static void GiveMainMenu() {
             Console.WriteLine("Выберите метод ввода данных:");
             Console.WriteLine("1. Ручной ввод");
             Console.WriteLine("2. Ввод из файла");
@@ -47,11 +47,13 @@
                         do {
                             Console.WriteLine($"Введите переменную: ");
                             input = Console.ReadLine();
-                            if (input == "~") {
-                                break;
-                            }
-                            if (!string.IsNullOrEmpty(input)) {
-                                array.Add(GetDoubleInput(input));
+                            if (!string.IsNullOrEmpty(input)) { 
+                                input = GetDoubleInput(input).Replace(',', '.');
+                                if (input == "~") {
+                                    break;
+                                }
+
+                                array.Add(double.Parse(input));
                             }
                         } while (true);
                         exitFlag = true;
@@ -83,7 +85,7 @@
             }
             return array;
         }
-        public static void GiveInputInstructions() {
+        private static void GiveInputInstructions() {
             Console.WriteLine("Введите элементы массива. Для выхода введите '~':");
         }
         public static int GetIntInput() {
@@ -101,11 +103,13 @@
 
             return number;
         }
-
-        public static double GetDoubleInput(string? input) {
+        private static string GetDoubleInput(string? input) {
             bool errFlag = true;
             double number = 0.0;
             while (errFlag) {
+                if (input == "~") {
+                    return input;
+                }
                 if (string.IsNullOrEmpty(input) || !double.TryParse(input.Replace(',', '.'), out number)) {
                     Console.WriteLine("Ошибка ввода! Попробуйте снова.");
                     input = Console.ReadLine();
@@ -115,9 +119,8 @@
                     errFlag = false;
                 }
             }
-            return number;
+            return input;
         }
-
         public static void SaveChoice(List<double> sortedArray, List<double> unsortedArray) {
             bool errFlag = false;
             Console.WriteLine("Сохранить результат?");
@@ -125,18 +128,18 @@
             Console.WriteLine("2. Нет");
             Console.WriteLine("3. Выход из программы");
             do {
-                saveChoiceControls selection = (saveChoiceControls)GetIntInput();
+                SaveChoiceControls selection = (SaveChoiceControls)GetIntInput();
                 switch (selection) {
-                    case saveChoiceControls.save:
+                    case SaveChoiceControls.save:
                         (bool isNameValid, string filePath) = Files.FileUploadValidation();
                         if (isNameValid) {
                             Files.FileUpload(filePath, sortedArray, unsortedArray);
                         }
                         break;
-                    case saveChoiceControls.cancel:
+                    case SaveChoiceControls.cancel:
 
                         break;
-                    case saveChoiceControls.exit:
+                    case SaveChoiceControls.exit:
                         Environment.Exit(0);
                         break;
                     default:
